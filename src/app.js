@@ -9,11 +9,10 @@ const JSONbig = require('json-bigint');
 const async = require('async');
 
 const REST_PORT = (process.env.PORT || 5000);
-const APIAI_ACCESS_TOKEN = process.env.APIAI_ACCESS_TOKEN;
-console.log(APIAI_ACCESS_TOKEN+process.env.APIAI_ACCESS_TOKEN+"hahahahaha");
-const APIAI_LANG = process.env.APIAI_LANG || 'en';
-const FB_VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN;
-const FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN;
+const APIAI_ACCESS_TOKEN = "48db1454985249c2ba0c66b7880b99d7";
+const APIAI_LANG = 'en';
+const FB_VERIFY_TOKEN = "my_voice_is_my_password_verify_me";
+const FB_PAGE_ACCESS_TOKEN = "EAAaIS9QfnxUBAHV3Gx9xFoKifOpc2RWtkWidLRdwQbptjBvRvhTIVsQhLNCfpfR6zXyfpGewMylC2ZBTUAamVJX6r7yROCjnOYZBMU2ZAgn4s7xnZB2OCoz4dEUkUxrrqHtU5q7MWvgOS56nVVZCFEf6gBZCbjcvx8WnWWxaR1EgZDZD";
 
 const apiAiService = apiai(APIAI_ACCESS_TOKEN, {language: APIAI_LANG, requestSource: "fb"});
 const sessionIds = new Map();
