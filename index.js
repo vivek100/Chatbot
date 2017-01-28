@@ -1,170 +1,249 @@
-var express = require('express')
-var bodyParser = require('body-parser')
-var request = require('request')
-var app = express()
+'use strict';
 
-app.set('port', (process.env.PORT || 5000))
+const apiai = require('apiai');
+const express = require('express');
+const bodyParser = require('body-parser');
+const uuid = require('node-uuid');
+const request = require('request');
+const JSONbig = require('json-bigint');
+const async = require('async');
 
-// Process application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({extended: false}))
+const REST_PORT = (process.env.PORT || 5000);
+const APIAI_ACCESS_TOKEN = process.env.APIAI_ACCESS_TOKEN;
+const APIAI_LANG = process.env.APIAI_LANG || 'en';
+const FB_VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN;
+const FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN;
 
-// Process application/json
-app.use(bodyParser.json())
+const apiAiService = apiai(APIAI_ACCESS_TOKEN, {language: APIAI_LANG, requestSource: "fb"});
+const sessionIds = new Map();
 
-// Index route
-app.get('/', function (req, res) {
-    res.send('Hello world, I am a chat bot')
-})
+function processEvent(event) {
+    var sender = event.sender.id.toString();
 
-// for Facebook verification
-app.get('/webhook/', function (req, res) {
-    if (req.query['hub.verify_token'] === 'my_voice_is_my_password_verify_me') {
-        res.send(req.query['hub.challenge'])
-    }
-    res.send('Error, wrong token')
-})
+    if ((event.message && event.message.text) || (event.postback && event.postback.payload)) {
+        var text = event.message ? event.message.text : event.postback.payload;
+        // Handle a text message from this sender
 
-// Spin up the server
-app.listen(app.get('port'), function() {
-    console.log('running on port', app.get('port'))
-})
-
-app.post('/webhook', function (req, res) {
-  var data = req.body;
-
-  // Make sure this is a page subscription
-  if (data.object === 'page') {
-
-    // Iterate over each entry - there may be multiple if batched
-    data.entry.forEach(function(entry) {
-      var pageID = entry.id;
-      var timeOfEvent = entry.time;
-
-      // Iterate over each messaging event
-      entry.messaging.forEach(function(event) {
-        if (event.message) {
-          receivedMessage(event);
-        } else {
-          console.log("Webhook received unknown event: ", event);
+        if (!sessionIds.has(sender)) {
+            sessionIds.set(sender, uuid.v4());
         }
-      });
+
+        console.log("Text", text);
+
+        let apiaiRequest = apiAiService.textRequest(text,
+            {
+                sessionId: sessionIds.get(sender),
+                originalRequest: {
+                    data: event,
+                    source: "facebook"
+                }
+            });
+
+        apiaiRequest.on('response', (response) => {
+            if (isDefined(response.result)) {
+                let responseText = response.result.fulfillment.speech;
+                let responseData = response.result.fulfillment.data;
+                let action = response.result.action;
+
+                if (isDefined(responseData) && isDefined(responseData.facebook)) {
+                    if (!Array.isArray(responseData.facebook)) {
+                        try {
+                            console.log('Response as formatted message');
+                            sendFBMessage(sender, responseData.facebook);
+                        } catch (err) {
+                            sendFBMessage(sender, {text: err.message});
+                        }
+                    } else {
+                        async.eachSeries(responseData.facebook, (facebookMessage, callback) => {
+                            try {
+                                if (facebookMessage.sender_action) {
+                                    console.log('Response as sender action');
+                                    sendFBSenderAction(sender, facebookMessage.sender_action, callback);
+                                }
+                                else {
+                                    console.log('Response as formatted message');
+                                    sendFBMessage(sender, facebookMessage, callback);
+                                }
+                            } catch (err) {
+                                sendFBMessage(sender, {text: err.message}, callback);
+                            }
+                        });
+                    }
+                } else if (isDefined(responseText)) {
+                    console.log('Response as text message');
+                    // facebook API limit for text length is 320,
+                    // so we must split message if needed
+                    var splittedText = splitResponse(responseText);
+
+                    async.eachSeries(splittedText, (textPart, callback) => {
+                        sendFBMessage(sender, {text: textPart}, callback);
+                    });
+                }
+
+            }
+        });
+
+        apiaiRequest.on('error', (error) => console.error(error));
+        apiaiRequest.end();
+    }
+}
+
+function splitResponse(str) {
+    if (str.length <= 320) {
+        return [str];
+    }
+
+    return chunkString(str, 300);
+}
+
+function chunkString(s, len) {
+    var curr = len, prev = 0;
+
+    var output = [];
+
+    while (s[curr]) {
+        if (s[curr++] == ' ') {
+            output.push(s.substring(prev, curr));
+            prev = curr;
+            curr += len;
+        }
+        else {
+            var currReverse = curr;
+            do {
+                if (s.substring(currReverse - 1, currReverse) == ' ') {
+                    output.push(s.substring(prev, currReverse));
+                    prev = currReverse;
+                    curr = currReverse + len;
+                    break;
+                }
+                currReverse--;
+            } while (currReverse > prev)
+        }
+    }
+    output.push(s.substr(prev));
+    return output;
+}
+
+function sendFBMessage(sender, messageData, callback) {
+    request({
+        url: 'https://graph.facebook.com/v2.6/me/messages',
+        qs: {access_token: FB_PAGE_ACCESS_TOKEN},
+        method: 'POST',
+        json: {
+            recipient: {id: sender},
+            message: messageData
+        }
+    }, (error, response, body) => {
+        if (error) {
+            console.log('Error sending message: ', error);
+        } else if (response.body.error) {
+            console.log('Error: ', response.body.error);
+        }
+
+        if (callback) {
+            callback();
+        }
     });
-    res.sendStatus(200);
-  }
+}
+
+function sendFBSenderAction(sender, action, callback) {
+    setTimeout(() => {
+        request({
+            url: 'https://graph.facebook.com/v2.6/me/messages',
+            qs: {access_token: FB_PAGE_ACCESS_TOKEN},
+            method: 'POST',
+            json: {
+                recipient: {id: sender},
+                sender_action: action
+            }
+        }, (error, response, body) => {
+            if (error) {
+                console.log('Error sending action: ', error);
+            } else if (response.body.error) {
+                console.log('Error: ', response.body.error);
+            }
+            if (callback) {
+                callback();
+            }
+        });
+    }, 1000);
+}
+
+function doSubscribeRequest() {
+    request({
+            method: 'POST',
+            uri: "https://graph.facebook.com/v2.6/me/subscribed_apps?access_token=" + FB_PAGE_ACCESS_TOKEN
+        },
+        (error, response, body) => {
+            if (error) {
+                console.error('Error while subscription: ', error);
+            } else {
+                console.log('Subscription result: ', response.body);
+            }
+        });
+}
+
+function isDefined(obj) {
+    if (typeof obj == 'undefined') {
+        return false;
+    }
+
+    if (!obj) {
+        return false;
+    }
+
+    return obj != null;
+}
+
+const app = express();
+
+app.use(bodyParser.text({type: 'application/json'}));
+
+app.get('/webhook/', (req, res) => {
+    if (req.query['hub.verify_token'] == FB_VERIFY_TOKEN) {
+        res.send(req.query['hub.challenge']);
+
+        setTimeout(() => {
+            doSubscribeRequest();
+        }, 3000);
+    } else {
+        res.send('Error, wrong validation token');
+    }
 });
 
-function receivedMessage(event) {
-  var senderID = event.sender.id;
-  var recipientID = event.recipient.id;
-  var timeOfMessage = event.timestamp;
-  var message = event.message;
+app.post('/webhook/', (req, res) => {
+    try {
+        var data = JSONbig.parse(req.body);
 
-  console.log("Received message for user %d and page %d at %d with message:", 
-    senderID, recipientID, timeOfMessage);
-  console.log(JSON.stringify(message));
-
-  var messageId = message.mid;
-
-  var messageText = message.text;
-  var messageAttachments = message.attachments;
-
-  if (messageText) {
-
-    // If we receive a text message, check to see if it matches a keyword
-    // and send back the example. Otherwise, just echo the text we received.
-    switch (messageText) {
-      case 'generic':
-        sendGenericMessage(senderID);
-        break;
-
-      default:
-        sendTextMessage(senderID, messageText);
-    }
-  } else if (messageAttachments) {
-    sendTextMessage(senderID, "Message with attachment received");
-  }
-}
-
-function sendTextMessage(recipientId, messageText) {
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    message: {
-      text: messageText
-    }
-  };
-
-  callSendAPI(messageData);
-}
-
-function sendGenericMessage(recipientId) {
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    message: {
-      attachment: {
-        type: "template",
-        payload: {
-          template_type: "generic",
-          elements: [{
-            title: "rift",
-            subtitle: "Next-generation virtual reality",
-            item_url: "https://www.oculus.com/en-us/rift/",               
-            image_url: "http://messengerdemo.parseapp.com/img/rift.png",
-            buttons: [{
-              type: "web_url",
-              url: "https://www.oculus.com/en-us/rift/",
-              title: "Open Web URL"
-            }, {
-              type: "postback",
-              title: "Call Postback",
-              payload: "Payload for first bubble",
-            }],
-          }, {
-            title: "touch",
-            subtitle: "Your Hands, Now in VR",
-            item_url: "https://www.oculus.com/en-us/touch/",               
-            image_url: "http://messengerdemo.parseapp.com/img/touch.png",
-            buttons: [{
-              type: "web_url",
-              url: "https://www.oculus.com/en-us/touch/",
-              title: "Open Web URL"
-            }, {
-              type: "postback",
-              title: "Call Postback",
-              payload: "Payload for second bubble",
-            }]
-          }]
+        if (data.entry) {
+            let entries = data.entry;
+            entries.forEach((entry) => {
+                let messaging_events = entry.messaging;
+                if (messaging_events) {
+                    messaging_events.forEach((event) => {
+                        if (event.message && !event.message.is_echo ||
+                            event.postback && event.postback.payload) {
+                            processEvent(event);
+                        }
+                    });
+                }
+            });
         }
-      }
+
+        return res.status(200).json({
+            status: "ok"
+        });
+    } catch (err) {
+        return res.status(400).json({
+            status: "error",
+            error: err
+        });
     }
-  };  
 
-  callSendAPI(messageData);
-}
+});
 
-function callSendAPI(messageData) {
-  request({
-    uri: 'https://graph.facebook.com/v2.6/me/messages',
-    qs: { access_token: token },
-    method: 'POST',
-    json: messageData
+app.listen(REST_PORT, () => {
+    console.log('Rest service ready on port ' + REST_PORT);
+});
 
-  }, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      var recipientId = body.recipient_id;
-      var messageId = body.message_id;
-
-      console.log("Successfully sent generic message with id %s to recipient %s", 
-        messageId, recipientId);
-    } else {
-      console.error("Unable to send message.");
-      console.error(response);
-      console.error(error);
-    }
-  });  
-}
-
-var token = "EAAaIS9QfnxUBAHV3Gx9xFoKifOpc2RWtkWidLRdwQbptjBvRvhTIVsQhLNCfpfR6zXyfpGewMylC2ZBTUAamVJX6r7yROCjnOYZBMU2ZAgn4s7xnZB2OCoz4dEUkUxrrqHtU5q7MWvgOS56nVVZCFEf6gBZCbjcvx8WnWWxaR1EgZDZD"
+doSubscribeRequest();
