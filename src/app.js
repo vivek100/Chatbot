@@ -199,6 +199,7 @@ function isDefined(obj) {
 const app = express();
 
 app.use(bodyParser.text({type: 'application/json'}));
+app.use('/', express.static(__dirname))  
 
 app.get('/webhook/', (req, res) => {
     if (req.query['hub.verify_token'] == FB_VERIFY_TOKEN) {
@@ -246,11 +247,5 @@ app.post('/webhook/', (req, res) => {
 app.listen(REST_PORT, () => {
     console.log('Rest service ready on port ' + REST_PORT);
 });
-app.get('/', function (req, res) {
-    fs.readFile('index.html',function (err, data){
-        res.writeHead(200, {'Content-Type': 'text/html','Content-Length':data.length});
-        res.write(data);
-        res.end();
-    });
-})
+
 doSubscribeRequest();
