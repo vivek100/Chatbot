@@ -7,6 +7,7 @@ const uuid = require('node-uuid');
 const request = require('request');
 const JSONbig = require('json-bigint');
 const async = require('async');
+var fs = require('fs');
 
 const REST_PORT = (process.env.PORT || 5000);
 const APIAI_ACCESS_TOKEN = "48db1454985249c2ba0c66b7880b99d7";
@@ -246,6 +247,10 @@ app.listen(REST_PORT, () => {
     console.log('Rest service ready on port ' + REST_PORT);
 });
 app.get('/', function (req, res) {
-        res.send('asdsdfsdf');
+    fs.readFile('index.html',function (err, data){
+        res.writeHead(200, {'Content-Type': 'text/html','Content-Length':data.length});
+        res.write(data);
+        res.end();
+    });
 })
 doSubscribeRequest();
