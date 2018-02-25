@@ -80,6 +80,15 @@ function processEvent(event) {
                     async.eachSeries(splittedText, (textPart, callback) => {
                         sendFBMessage(sender, {text: textPart}, callback);
                     });
+
+                    if(action === "smalltalk.greetings.hello"){
+                        console.log(sender);
+
+                        var greetings1 = "I am Batuk, an Internet Doggo.";
+                        sendFBMessage(sender, greetings1, sendGif(sender));
+
+                    }
+
                 }
 
             }
@@ -147,7 +156,31 @@ function sendFBMessage(sender, messageData, callback) {
         }
     });
 }
-
+function sendGif(sender) {
+    let messageData = {
+        "attachment": {
+            "type": "image",
+            "payload": {
+                "url": "https://media.giphy.com/media/FTJfA8RiHaOfS/giphy.gif",
+            }
+        }
+    }
+    request({
+        url: 'https://graph.facebook.com/v2.6/me/messages',
+        qs: {access_token:FB_PAGE_ACCESS_TOKEN},
+        method: 'POST',
+        json: {
+            recipient: {id:sender},
+            message: messageData,
+        }
+    }, function(error, response, body) {
+        if (error) {
+            console.log('Error sending messages: ', error)
+        } else if (response.body.error) {
+            console.log('Error: ', response.body.error)
+        }
+    })
+}
 function sendFBSenderAction(sender, action, callback) {
     setTimeout(() => {
         request({
