@@ -85,7 +85,7 @@ function processEvent(event) {
                         console.log(sender);
 
                         var greetings1 = "I am Batuk, an Internet Doggo.";
-                        sendFBMessage(sender, greetings1, sendGif(sender));
+                        sendFBMessage(sender, "I am Batuk, an Internet Doggo.", sendGif(sender));
 
                     }
 
@@ -136,6 +136,7 @@ function chunkString(s, len) {
 }
 
 function sendFBMessage(sender, messageData, callback) {
+    console.log("inside send Message Function "+messageData);
     request({
         url: 'https://graph.facebook.com/v2.6/me/messages',
         qs: {access_token: FB_PAGE_ACCESS_TOKEN},
