@@ -31,6 +31,12 @@ function processEvent(event) {
 
         console.log("Text", text);
 
+        if((event.postback && event.postback.payload)){
+            console.log("Post back", text);
+
+
+        }else{
+
         let apiaiRequest = apiAiService.textRequest(text,
             {
                 sessionId: sessionIds.get(sender),
@@ -88,7 +94,7 @@ function processEvent(event) {
                         var splittedText1 = splitResponse(greetings1);
                         //sendFBMessage(sender, "I am Batuk, an Internet Doggo.", sendGif(sender));
                         async.eachSeries(splittedText1, (textPart, callback) => {
-                            sendFBMessage(sender, {text: textPart}, sendGif(sender));
+                            sendFBMessage(sender, {text: textPart}, sendGif(sender,sendGreetingOptions(sender)));
                         });
 
                     }
@@ -100,6 +106,7 @@ function processEvent(event) {
 
         apiaiRequest.on('error', (error) => console.error(error));
         apiaiRequest.end();
+        }
     }
 }
 
@@ -161,7 +168,7 @@ function sendFBMessage(sender, messageData, callback) {
         }
     });
 }
-function sendGif(sender) {
+function sendGif(sender,callback) {
     let messageData = {
         "attachment": {
             "type": "image",
@@ -184,7 +191,52 @@ function sendGif(sender) {
         } else if (response.body.error) {
             console.log('Error:2 ', response.body.error)
         }
-    })
+
+                if (callback) {
+            callback();
+        }
+    });
+}
+function sendGreetingOptions(sender,callback) {
+    let messageData = {
+        "attachment":{
+            "type":"template",
+            "payload":{
+              "template_type":"button",
+              "text":"Do you want to know more about me?",
+              "buttons":[
+                {
+                    "type": "postback",
+                    "title": "Yes",
+                    "payload": "yes"
+                },{
+                    "type": "postback",
+                    "title": "No",
+                    "payload": "no"
+                }
+              ]
+            }
+          }
+    }
+    request({
+        url: 'https://graph.facebook.com/v2.6/me/messages',
+        qs: {access_token:FB_PAGE_ACCESS_TOKEN},
+        method: 'POST',
+        json: {
+            recipient: {id:sender},
+            message: messageData,
+        }
+    }, function(error, response, body) {
+        if (error) {
+            console.log('Error sending messages:2 ', error)
+        } else if (response.body.error) {
+            console.log('Error:2 ', response.body.error)
+        }
+
+                if (callback) {
+            callback();
+        }
+    });
 }
 function sendFBSenderAction(sender, action, callback) {
     setTimeout(() => {
