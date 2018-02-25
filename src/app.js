@@ -203,7 +203,7 @@ function sendGreetingOptions(sender,callback) {
             "type":"template",
             "payload":{
               "template_type":"button",
-              "text":"Do you want to know more about me?",
+              "text":"Wanna know more about me?",
               "buttons":[
                 {
                     "type": "postback",
@@ -317,6 +317,8 @@ app.post('/webhook/', (req, res) => {
                         if (event.message && !event.message.is_echo ||
                             event.postback && event.postback.payload) {
                             processEvent(event);
+                            sendFBSenderAction("mark_seen");
+                            sendFBSenderAction("typing_on");
                         }
                     });
                 }
