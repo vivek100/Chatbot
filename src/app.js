@@ -314,11 +314,13 @@ app.post('/webhook/', (req, res) => {
                 let messaging_events = entry.messaging;
                 if (messaging_events) {
                     messaging_events.forEach((event) => {
+                        var sender = event.sender.id.toString();
                         if (event.message && !event.message.is_echo ||
                             event.postback && event.postback.payload) {
+                            
                             processEvent(event);
-                            sendFBSenderAction("mark_seen");
-                            sendFBSenderAction("typing_on");
+                            sendFBSenderAction(sender,"mark_seen");
+                            sendFBSenderAction(sender,"typing_on");
                         }
                     });
                 }
