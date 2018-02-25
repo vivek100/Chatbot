@@ -85,7 +85,11 @@ function processEvent(event) {
                         console.log(sender);
 
                         var greetings1 = "I am Batuk, an Internet Doggo.";
-                        sendFBMessage(sender, "I am Batuk, an Internet Doggo.", sendGif(sender));
+                        var splittedText1 = splitResponse(greetings1);
+                        //sendFBMessage(sender, "I am Batuk, an Internet Doggo.", sendGif(sender));
+                        async.eachSeries(splittedText1, (textPart, callback) => {
+                            sendFBMessage(sender, {text: textPart}, sendGif(sender));
+                        });
 
                     }
 
