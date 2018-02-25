@@ -147,9 +147,9 @@ function sendFBMessage(sender, messageData, callback) {
         }
     }, (error, response, body) => {
         if (error) {
-            console.log('Error sending message: ', error);
+            console.log('Error sending message:1 ', error);
         } else if (response.body.error) {
-            console.log('Error: ', response.body.error);
+            console.log('Error:1 ', response.body.error);
         }
 
         if (callback) {
@@ -176,9 +176,9 @@ function sendGif(sender) {
         }
     }, function(error, response, body) {
         if (error) {
-            console.log('Error sending messages: ', error)
+            console.log('Error sending messages:2 ', error)
         } else if (response.body.error) {
-            console.log('Error: ', response.body.error)
+            console.log('Error:2 ', response.body.error)
         }
     })
 }
