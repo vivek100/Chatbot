@@ -174,6 +174,7 @@ function sendFBMessage(sender, messageData, callback) {
     });
 }
 function sendGif(sender,callback) {
+    sendFBSenderAction(sender,"typing_on");
     let messageData = {
         "attachment": {
             "type": "image",
@@ -182,29 +183,31 @@ function sendGif(sender,callback) {
             }
         }
     }
-    request({
-        url: 'https://graph.facebook.com/v2.6/me/messages',
-        qs: {access_token:FB_PAGE_ACCESS_TOKEN},
-        method: 'POST',
-        json: {
-            recipient: {id:sender},
-            message: messageData,
-        }
-    }, function(error, response, body) {
-        if (error) {
-            console.log('Error sending messages:2 ', error)
-        } else if (response.body.error) {
-            console.log('Error:2 ', response.body.error)
-        }
+    setTimeout(() => {
+            request({
+                url: 'https://graph.facebook.com/v2.6/me/messages',
+                qs: {access_token:FB_PAGE_ACCESS_TOKEN},
+                method: 'POST',
+                json: {
+                    recipient: {id:sender},
+                    message: messageData,
+                }
+            }, function(error, response, body) {
+                if (error) {
+                    console.log('Error sending messages:2 ', error)
+                } else if (response.body.error) {
+                    console.log('Error:2 ', response.body.error)
+                }
 
-                if (callback) {
-                    sendFBSenderAction(sender,"typing_on");
-                    setTimeout(() => {
-                             callback();
-                            }, 3000);
-            
-        }
-    });
+                        if (callback) {
+                            sendFBSenderAction(sender,"typing_on");
+                            setTimeout(() => {
+                                     callback();
+                                    }, 3000);
+
+                }
+            });
+        }, 3000);
 }
 function sendGreetingOptions(sender,callback) {
     sendFBSenderAction(sender,"typing_on");
