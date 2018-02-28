@@ -96,8 +96,8 @@ function processEvent(event) {
                         async.eachSeries(splittedText1, (textPart, callback) => {
                             sendFBSenderAction(sender,"typing_on");
                             setTimeout(() => {
-                             sendFBMessage(sender, {text: textPart}, sendGreetingOptions(sender));
-                             sendGif(sender);
+                             sendFBMessage(sender, {text: textPart}, sendGif(sender,sendGreetingOptions(sender)));
+                             
                             }, 3000);
                             
                         });
@@ -199,12 +199,8 @@ function sendGif(sender,callback) {
                     console.log('Error:2 ', response.body.error)
                 }
 
-                        if (callback) {
-                            sendFBSenderAction(sender,"typing_on");
-                            setTimeout(() => {
-                                     callback();
-                                    }, 3000);
-
+                if (callback) {
+                   callback();
                 }
             });
         }, 3000);
