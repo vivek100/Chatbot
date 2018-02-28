@@ -183,7 +183,7 @@ function sendGif(sender,callback) {
             }
         }
     }
-    setTimeout(() => {
+
             request({
                 url: 'https://graph.facebook.com/v2.6/me/messages',
                 qs: {access_token:FB_PAGE_ACCESS_TOKEN},
@@ -203,7 +203,6 @@ function sendGif(sender,callback) {
                    callback();
                 }
             });
-        }, 3000);
 }
 function sendGreetingOptions(sender,callback) {
     sendFBSenderAction(sender,"typing_on");
