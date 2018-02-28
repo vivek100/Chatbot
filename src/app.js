@@ -321,8 +321,9 @@ app.post('/webhook/', (req, res) => {
                             
                             sendFBSenderAction(sender,"mark_seen");
                             sendFBSenderAction(sender,"typing_on");
-                            sleep(3);
-                            processEvent(event);
+                            setTimeout(() => {
+                             processEvent(event);
+                            }, 3000);
                             
                         }
                     });
