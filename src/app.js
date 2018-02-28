@@ -94,9 +94,10 @@ function processEvent(event) {
                         var splittedText1 = splitResponse(greetings1);
                         //sendFBMessage(sender, "I am Batuk, an Internet Doggo.", sendGif(sender));
                         async.eachSeries(splittedText1, (textPart, callback) => {
+                            sendGif(sender);
                             sendFBSenderAction(sender,"typing_on");
                             setTimeout(() => {
-                             sendFBMessage(sender, {text: textPart}, sendGif(sender,sendGreetingOptions(sender)));
+                             sendFBMessage(sender, {text: textPart},sendGreetingOptions(sender));
                              
                             }, 3000);
                             
