@@ -96,7 +96,8 @@ function processEvent(event) {
                         async.eachSeries(splittedText1, (textPart, callback) => {
                             sendFBSenderAction(sender,"typing_on");
                             setTimeout(() => {
-                             sendFBMessage(sender, {text: textPart}, sendGif(sender,sendGreetingOptions(sender)));
+                             sendFBMessage(sender, {text: textPart}, sendGreetingOptions(sender));
+                             sendGif(sender);
                             }, 3000);
                             
                         });
@@ -206,6 +207,7 @@ function sendGif(sender,callback) {
     });
 }
 function sendGreetingOptions(sender,callback) {
+    sendFBSenderAction(sender,"typing_on");
     let messageData = {
         "attachment":{
             "type":"template",
@@ -226,25 +228,29 @@ function sendGreetingOptions(sender,callback) {
             }
           }
     }
-    request({
-        url: 'https://graph.facebook.com/v2.6/me/messages',
-        qs: {access_token:FB_PAGE_ACCESS_TOKEN},
-        method: 'POST',
-        json: {
-            recipient: {id:sender},
-            message: messageData,
-        }
-    }, function(error, response, body) {
-        if (error) {
-            console.log('Error sending messages:2 ', error)
-        } else if (response.body.error) {
-            console.log('Error:2 ', response.body.error)
-        }
+    setTimeout(() => {
+            request({
+                    url: 'https://graph.facebook.com/v2.6/me/messages',
+                    qs: {access_token:FB_PAGE_ACCESS_TOKEN},
+                    method: 'POST',
+                    json: { 
+                        recipient: {id:sender},
+                        message: messageData,
+                    }
+                }, function(error, response, body) {
+                    if (error) {
+                        console.log('Error sending messages:2 ', error)
+                    } else if (response.body.error) {
+                        console.log('Error:2 ', response.body.error)
+                    }
 
-                if (callback) {
-            callback();
-        }
-    });
+                            if (callback) {
+                        callback();
+                    }
+                });
+
+            }, 3000);
+
 }
 function sendFBSenderAction(sender, action, callback) {
     setTimeout(() => {
