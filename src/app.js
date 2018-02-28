@@ -94,7 +94,11 @@ function processEvent(event) {
                         var splittedText1 = splitResponse(greetings1);
                         //sendFBMessage(sender, "I am Batuk, an Internet Doggo.", sendGif(sender));
                         async.eachSeries(splittedText1, (textPart, callback) => {
-                            sendFBMessage(sender, {text: textPart}, sendGif(sender,sendGreetingOptions(sender)));
+                            setTimeout(() => {
+                             sendFBSenderAction(sender,"typing_on");
+                             sendFBMessage(sender, {text: textPart}, sendGif(sender,sendGreetingOptions(sender)));
+                            }, 3000);
+                            
                         });
 
                     }
@@ -193,7 +197,11 @@ function sendGif(sender,callback) {
         }
 
                 if (callback) {
-            callback();
+                    setTimeout(() => {
+                             sendFBSenderAction(sender,"typing_on");
+                             callback();
+                            }, 3000);
+            
         }
     });
 }
