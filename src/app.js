@@ -175,7 +175,7 @@ function sendFBMessage(sender, messageData, callback) {
     });
 }
 function sendGif(sender,callback) {
-    sendFBSenderAction(sender,"typing_on");
+    
     let messageData = {
         "attachment": {
             "type": "image",
@@ -199,7 +199,7 @@ function sendGif(sender,callback) {
                 } else if (response.body.error) {
                     console.log('Error:2 ', response.body.error)
                 }
-
+                sendFBSenderAction(sender,"typing_on");
                 if (callback) {
                    callback();
                 }
