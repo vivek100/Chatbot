@@ -33,6 +33,12 @@ function processEvent(event) {
 
         if((event.postback && event.postback.payload)){
             console.log("Post back", text);
+            if(text === "no"){
+            
+               }
+            if(text === "yes"){
+            
+               }
 
 
         }else{
