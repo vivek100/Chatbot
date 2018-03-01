@@ -37,7 +37,7 @@ function processEvent(event) {
             
                }
             if(text === "yes"){
-                        var greetings2 = "I am a Shiba Inu Dog, 4 years old now.\nThis is me when I was 4 months old :D.";
+                        var greetings2 = "I am a Shiba Inu breed,\u000A 4 years old now.\u000AThis is me when I was 4 months old :D.";
                         var splittedText1 = splitResponse(greetings2);
                         //sendFBMessage(sender, "I am Batuk, an Internet Doggo.", sendGif(sender));
                         
