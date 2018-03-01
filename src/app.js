@@ -157,7 +157,7 @@ function processEvent(event) {
                             
                             sendFBSenderAction(sender,"typing_on");
                             setTimeout(() => {
-                             sendFBMessage(sender, {text: textPart});
+                             sendFBMessage(sender,  {text: textPart});
                              
                             }, 3000);
                             
