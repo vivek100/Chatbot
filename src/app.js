@@ -37,12 +37,12 @@ function processEvent(event) {
             
                }
             if(text === "yes"){
-                        var greetings2 = "I am a Shiba Inu Dog, 4 years old now. This is me when I was 4 months old :D.";
+                        var greetings2 = "I am a Shiba Inu Dog, 4 years old now.\nThis is me when I was 4 months old :D.";
                         var splittedText1 = splitResponse(greetings2);
                         //sendFBMessage(sender, "I am Batuk, an Internet Doggo.", sendGif(sender));
-                        sendGif(sender,"https://shiba.fr/wp-content/uploads/shiba-inu-prix-chiot.jpg");
+                        
                         async.eachSeries(splittedText1, (textPart, callback) => {
-                            
+                            sendGif(sender,"https://shiba.fr/wp-content/uploads/shiba-inu-prix-chiot.jpg");
                             sendFBSenderAction(sender,"typing_on");
                             setTimeout(() => {
                              sendFBMessage(sender, {text: textPart},sendGreetingOptions2(sender));
