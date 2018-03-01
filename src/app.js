@@ -18,7 +18,7 @@ const FB_PAGE_ACCESS_TOKEN = "EAAaIS9QfnxUBAHV3Gx9xFoKifOpc2RWtkWidLRdwQbptjBvRv
 const apiAiService = apiai(APIAI_ACCESS_TOKEN, {language: APIAI_LANG, requestSource: "fb"});
 const sessionIds = new Map();
 
-const name=0;
+var name=0;
 
 function processEvent(event) {
     var sender = event.sender.id.toString();
@@ -48,7 +48,7 @@ function processEvent(event) {
                             sendFBSenderAction(sender,"typing_on");
                             
                             setTimeout(() => {
-                             sendFBMessage(sender, {text: textPart},sendFBMessage(sender,{text: "What is your favourite Animal?"}));
+                             sendFBMessage(sender, {text: textPart},sendFBMessage(sender,{text: "Do you own a pet?"}));
                              
                             }, 3000);
                             
@@ -230,7 +230,10 @@ function sendFBMessage(sender, messageData, callback) {
         }
 
         if (callback) {
+            setTimeout(() => {
             callback();
+        }, 3000);
+            
         }
     });
 }
