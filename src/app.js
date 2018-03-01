@@ -46,6 +46,7 @@ function processEvent(event) {
                         async.eachSeries(splittedText1, (textPart, callback) => {
                             sendGif(sender,"https://shiba.fr/wp-content/uploads/shiba-inu-prix-chiot.jpg");
                             sendFBSenderAction(sender,"typing_on");
+                            
                             setTimeout(() => {
                              sendFBMessage(sender, {text: textPart},sendFBMessage({text: "What is your favourite Animal?"}));
                              
@@ -116,7 +117,7 @@ function processEvent(event) {
                         //sendFBMessage(sender, "I am Batuk, an Internet Doggo.", sendGif(sender));
                         sendGif(sender,"https://media.giphy.com/media/FTJfA8RiHaOfS/giphy.gif");
                         async.eachSeries(splittedText1, (textPart, callback) => {
-                            
+                            console.log(textPart);
                             sendFBSenderAction(sender,"typing_on");
                             setTimeout(() => {
                              sendFBMessage(sender, {text: textPart},sendGreetingOptions(sender));
@@ -137,7 +138,7 @@ function processEvent(event) {
                             
                             sendFBSenderAction(sender,"typing_on");
                             setTimeout(() => {
-                             sendFBMessage(sender, {text: textPart},sendGreetingOptions(sender));
+                             sendFBMessage(sender, {text: textPart});
                              
                             }, 3000);
                             
@@ -156,7 +157,7 @@ function processEvent(event) {
                             
                             sendFBSenderAction(sender,"typing_on");
                             setTimeout(() => {
-                             sendFBMessage(sender, {text: textPart},sendGreetingOptions(sender));
+                             sendFBMessage(sender, {text: textPart});
                              
                             }, 3000);
                             
