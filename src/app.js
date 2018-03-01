@@ -18,6 +18,8 @@ const FB_PAGE_ACCESS_TOKEN = "EAAaIS9QfnxUBAHV3Gx9xFoKifOpc2RWtkWidLRdwQbptjBvRv
 const apiAiService = apiai(APIAI_ACCESS_TOKEN, {language: APIAI_LANG, requestSource: "fb"});
 const sessionIds = new Map();
 
+const name=0;
+
 function processEvent(event) {
     var sender = event.sender.id.toString();
 
@@ -45,7 +47,7 @@ function processEvent(event) {
                             sendGif(sender,"https://shiba.fr/wp-content/uploads/shiba-inu-prix-chiot.jpg");
                             sendFBSenderAction(sender,"typing_on");
                             setTimeout(() => {
-                             sendFBMessage(sender, {text: textPart},sendGreetingOptions2(sender));
+                             sendFBMessage(sender, {text: textPart},sendFBMessage({text: "What is your favourite Animal?"}));
                              
                             }, 3000);
                             
@@ -112,6 +114,42 @@ function processEvent(event) {
                         var splittedText1 = splitResponse(greetings1);
                         //sendFBMessage(sender, "I am Batuk, an Internet Doggo.", sendGif(sender));
                         sendGif(sender,"https://media.giphy.com/media/FTJfA8RiHaOfS/giphy.gif");
+                        async.eachSeries(splittedText1, (textPart, callback) => {
+                            
+                            sendFBSenderAction(sender,"typing_on");
+                            setTimeout(() => {
+                             sendFBMessage(sender, {text: textPart},sendGreetingOptions(sender));
+                             
+                            }, 3000);
+                            
+                        });
+
+                    }
+                    if(action === "smalltalk.confirmation.yes"){
+                        console.log(sender);
+                        name=1;
+                        var greetings1 = "oh, what is he or she called ?";
+                        var splittedText1 = splitResponse(greetings1);
+                        //sendFBMessage(sender, "I am Batuk, an Internet Doggo.", sendGif(sender));
+                        sendGif(sender,"https://i.redd.it/zpzmibmndanx.gif");
+                        async.eachSeries(splittedText1, (textPart, callback) => {
+                            
+                            sendFBSenderAction(sender,"typing_on");
+                            setTimeout(() => {
+                             sendFBMessage(sender, {text: textPart},sendGreetingOptions(sender));
+                             
+                            }, 3000);
+                            
+                        });
+
+                    }
+                    if(name === 1){
+                        console.log(sender);
+                        name=0;
+                        var greetings1 = "Okay, say hi to "+text+" from me :).";
+                        var splittedText1 = splitResponse(greetings1);
+                        //sendFBMessage(sender, "I am Batuk, an Internet Doggo.", sendGif(sender));
+                        sendGif(sender,"https://i.redd.it/zpzmibmndanx.gif");
                         async.eachSeries(splittedText1, (textPart, callback) => {
                             
                             sendFBSenderAction(sender,"typing_on");
