@@ -37,7 +37,19 @@ function processEvent(event) {
             
                }
             if(text === "yes"){
-            
+                        var greetings2 = "I am a Shiba Inu Dog, 4 years old now. This is me when I was 4 months old :D.";
+                        var splittedText1 = splitResponse(greetings2);
+                        //sendFBMessage(sender, "I am Batuk, an Internet Doggo.", sendGif(sender));
+                        sendGif(sender,"https://shiba.fr/wp-content/uploads/shiba-inu-prix-chiot.jpg");
+                        async.eachSeries(splittedText1, (textPart, callback) => {
+                            
+                            sendFBSenderAction(sender,"typing_on");
+                            setTimeout(() => {
+                             sendFBMessage(sender, {text: textPart},sendGreetingOptions2(sender));
+                             
+                            }, 3000);
+                            
+                        });
                }
 
 
@@ -99,8 +111,9 @@ function processEvent(event) {
                         var greetings1 = "I am Batuk, an Internet Doggo.";
                         var splittedText1 = splitResponse(greetings1);
                         //sendFBMessage(sender, "I am Batuk, an Internet Doggo.", sendGif(sender));
+                        sendGif(sender,"https://media.giphy.com/media/FTJfA8RiHaOfS/giphy.gif");
                         async.eachSeries(splittedText1, (textPart, callback) => {
-                            sendGif(sender,"https://media.giphy.com/media/FTJfA8RiHaOfS/giphy.gif");
+                            
                             sendFBSenderAction(sender,"typing_on");
                             setTimeout(() => {
                              sendFBMessage(sender, {text: textPart},sendGreetingOptions(sender));
@@ -228,6 +241,53 @@ function sendGreetingOptions(sender,callback) {
                     "type": "postback",
                     "title": "No",
                     "payload": "no"
+                }
+              ]
+            }
+          }
+    }
+    setTimeout(() => {
+            request({
+                    url: 'https://graph.facebook.com/v2.6/me/messages',
+                    qs: {access_token:FB_PAGE_ACCESS_TOKEN},
+                    method: 'POST',
+                    json: { 
+                        recipient: {id:sender},
+                        message: messageData,
+                    }
+                }, function(error, response, body) {
+                    if (error) {
+                        console.log('Error sending messages:2 ', error)
+                    } else if (response.body.error) {
+                        console.log('Error:2 ', response.body.error)
+                    }
+
+                            if (callback) {
+                        callback();
+                    }
+                });
+
+            }, 3000);
+
+}
+
+function sendGreetingOptions2(sender,callback) {
+    sendFBSenderAction(sender,"typing_on");
+    let messageData = {
+        "attachment":{
+            "type":"template",
+            "payload":{
+              "template_type":"button",
+              "text":"Wanna know about my friends?",
+              "buttons":[
+                {
+                    "type": "postback",
+                    "title": "Yes",
+                    "payload": "moreyes"
+                },{
+                    "type": "postback",
+                    "title": "No",
+                    "payload": "moreno"
                 }
               ]
             }
