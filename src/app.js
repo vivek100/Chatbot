@@ -48,7 +48,7 @@ function processEvent(event) {
                             sendFBSenderAction(sender,"typing_on");
                             
                             setTimeout(() => {
-                             sendFBMessage(sender, {text: textPart},sendFBMessage({text: "What is your favourite Animal?"}));
+                             sendFBMessage(sender, {text: textPart},sendFBMessage(sender,{text: "What is your favourite Animal?"}));
                              
                             }, 3000);
                             
