@@ -22,6 +22,7 @@ var name=0;
 
 function processEvent(event) {
     var sender = event.sender.id.toString();
+    console.log("Id when inside: "+sender)
 
     if ((event.message && event.message.text) || (event.postback && event.postback.payload)) {
         var text = event.message ? event.message.text : event.postback.payload;
@@ -679,11 +680,10 @@ app.post('/webhook/', (req, res) => {
 // Handle postback from webview
 app.get('/optionspostback', (req, res) => {
     let body = req.query;
-    let response = {
-        "text": `Great, I will book you a ${body.bed} bed, with ${body.pillows} pillows and a ${body.view} view.`
-    };
+    let response = `Great, I will book you a ${body.bed} bed, with ${body.pillows} pillows and a ${body.view} view.`
 
     res.status(200).send('Please close this window to return to the conversation thread.');
+    console.log("Id when inside: "+body.psid)
     sendFBMessage(body.psid, response);
 });
 
