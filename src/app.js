@@ -63,12 +63,10 @@ var PostCounter = [2,2,1,3,1,1];
                                                     "content_type":"text",
                                                     "title":"Batuk!",
                                                     "payload":"selectedBatuk",
-                                                    "image_url":"https://i.pinimg.com/originals/9f/8a/16/9f8a16e38df86be51951fa374fb9b351.png"
                                                   },{
                                                     "content_type":"text",
                                                     "title":"Customer Care!",
                                                     "payload":"selectedCare",
-                                                    "image_url":"https://cdn.shopify.com/s/files/1/1061/1924/products/CAT_emoji_icon_png_1024x1024.png"
                                                   }
                                                 ]
                                               }
