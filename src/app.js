@@ -26,6 +26,7 @@ var currentPost;
 var acceptedFbPost= Array();
 var FbAcceptedCount=0;
 var PostCounter = [2,2,1,3,1,1];
+
         setTimeout(function checkPost(){
             request({'url':'https://graph.facebook.com/v2.9/974127312733413/visitor_posts?access_token=' + FB_PAGE_ACCESS_TOKEN
            }, function (error, response, body) {
@@ -87,10 +88,6 @@ var PostCounter = [2,2,1,3,1,1];
                                             console.log('Error sending messages:2 ', error)
                                         } else if (response.body.error) {
                                             console.log('Error:2 ', response.body.error)
-                                        }
-                                        sendFBSenderAction(sender,"typing_on");
-                                        if (callback) {
-                                           callback();
                                         }
                                     });
                                 }
