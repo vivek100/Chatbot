@@ -27,7 +27,7 @@ var acceptedFbPost= Array();
 var FbAcceptedCount=0;
 
         setTimeout(function checkPost(){
-            request({'url':'https://graph.facebook.com/v2.9/974127312733413/visitor_posts?access_token=' + accessToken
+            request({'url':'https://graph.facebook.com/v2.9/974127312733413/visitor_posts?access_token=' + FB_PAGE_ACCESS_TOKEN
            }, function (error, response, body) {
                if (!error && response.statusCode == 200) {
                    //console.log(response.body);
