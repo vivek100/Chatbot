@@ -321,11 +321,11 @@ function sendQuickReply(sender,text,callback) {
         "quick_replies":[
           {
             "content_type":"text",
-            "title":"🐶 Dog",
+            "title":"\uE052 Dog",
             "payload":"SelectedDog",
           },{
             "content_type":"text",
-            "title":"🐱 Cat",
+            "title":"\uE04F Cat",
             "payload":"SelectedCat",
           }
         ]
