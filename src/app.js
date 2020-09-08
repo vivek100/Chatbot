@@ -494,7 +494,7 @@ function sendGameButton(sender,callback) {
                 text: "Play Game.",
                 buttons: [{
                     type: "web_url",
-                    url: SERVER_URL + "/options",
+                    url: "https://nameless-tor-65554.herokuapp.com" + "/options",
                     title: "Win Coupon!",
                     webview_height_ratio: "compact",
                     messenger_extensions: true
