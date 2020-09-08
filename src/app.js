@@ -52,6 +52,21 @@ function processEvent(event) {
                             }, 3000);
                             
                         });
+            }if(text === "playgame"){
+                var greetings2 = "I have a 20% off coupon for you.\u000A Play a game with me to win a coupon.";
+                var splittedText1 = splitResponse(greetings2);
+                //sendFBMessage(sender, "I am Batuk, an Internet Doggo.", sendGif(sender));
+                
+                async.eachSeries(splittedText1, (textPart, callback) => {
+                    //sendGif(sender,"https://i.ibb.co/JqHjxXF/Mini-Shiba-Inu-HP-long.jpg");
+                    sendFBSenderAction(sender,"typing_on");
+                    
+                    setTimeout(() => {
+                     sendFBMessage(sender, {text: textPart},sendGameButton(sender));
+                     
+                    }, 3000);
+                    
+                });
             }else if(event.message.quick_reply){
                 if (event.message.quick_reply.payload === "SelectedDog") {
                     console.log("Post back", event.message.quick_reply.payload);
@@ -372,7 +387,7 @@ function sendQuickReply(sender,text,callback) {
             }, 3000);
 
 }
-function sendCustomDogLayout(sender) {
+function sendCustomDogLayout(sender,callback) {
     sendFBSenderAction(sender,"typing_on");
     let messageData = {
         "attachment":{
@@ -396,8 +411,8 @@ function sendCustomDogLayout(sender) {
                     "title":"View Website"
                   },{
                     "type":"postback",
-                    "title":"Start Chatting",
-                    "payload":"DEVELOPER_DEFINED_PAYLOAD"
+                    "title":"Keep Chatting",
+                    "payload":"playgame"
                   }              
                 ]      
               },{
@@ -416,8 +431,8 @@ function sendCustomDogLayout(sender) {
                     "title":"View Website"
                   },{
                     "type":"postback",
-                    "title":"Start Chatting",
-                    "payload":"DEVELOPER_DEFINED_PAYLOAD"
+                    "title":"Keep Chatting",
+                    "payload":"playgame"
                   }              
                 ]      
               },{
@@ -436,8 +451,8 @@ function sendCustomDogLayout(sender) {
                     "title":"View Website"
                   },{
                     "type":"postback",
-                    "title":"Start Chatting",
-                    "payload":"DEVELOPER_DEFINED_PAYLOAD"
+                    "title":"Keep Chatting",
+                    "payload":"playgame"
                   }              
                 ]      
               }
@@ -445,6 +460,48 @@ function sendCustomDogLayout(sender) {
           }
         }
       }
+    setTimeout(() => {
+            request({
+                    url: 'https://graph.facebook.com/v2.6/me/messages',
+                    qs: {access_token:FB_PAGE_ACCESS_TOKEN},
+                    method: 'POST',
+                    json: { 
+                        recipient: {id:sender},
+                        message: messageData,
+                    }
+                }, function(error, response, body) {
+                    if (error) {
+                        console.log('Error sending messages:2 ', error)
+                    } else if (response.body.error) {
+                        console.log('Error:4 ', response.body.error)
+                    }
+
+                            if (callback) {
+                        callback();
+                    }
+                });
+
+            }, 3000);
+
+}
+function sendGameButton(sender,callback) {
+    sendFBSenderAction(sender,"typing_on");
+    let messageData = {
+        attachment: {
+            type: "template",
+            payload: {
+                template_type: "button",
+                text: "Play Game.",
+                buttons: [{
+                    type: "web_url",
+                    url: SERVER_URL + "/options",
+                    title: "Win Coupon!",
+                    webview_height_ratio: "compact",
+                    messenger_extensions: true
+                }]
+            }
+        }
+    }
     setTimeout(() => {
             request({
                     url: 'https://graph.facebook.com/v2.6/me/messages',
@@ -618,6 +675,28 @@ app.post('/webhook/', (req, res) => {
         });
     }
 
+});
+// Handle postback from webview
+app.get('/optionspostback', (req, res) => {
+    let body = req.query;
+    let response = {
+        "text": `Great, I will book you a ${body.bed} bed, with ${body.pillows} pillows and a ${body.view} view.`
+    };
+
+    res.status(200).send('Please close this window to return to the conversation thread.');
+    sendFBMessage(body.psid, response);
+});
+
+app.get('/options', (req, res, next) => {
+    let referer = req.get('Referer');
+    if (referer) {
+        if (referer.indexOf('www.messenger.com') >= 0) {
+            res.setHeader('X-Frame-Options', 'ALLOW-FROM https://www.messenger.com/');
+        } else if (referer.indexOf('www.facebook.com') >= 0) {
+            res.setHeader('X-Frame-Options', 'ALLOW-FROM https://www.facebook.com/');
+        }
+        res.sendFile('options.html', {root: __dirname});
+    }
 });
 
 app.listen(REST_PORT, () => {
