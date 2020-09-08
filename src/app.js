@@ -317,7 +317,7 @@ function sendGreetingOptions(sender,callback) {
 function sendQuickReply(sender,text,callback) {
     sendFBSenderAction(sender,"typing_on");
     let messageData = {
-        "text": text,
+        "text": "What person are you ?",
         "quick_replies":[
           {
             "content_type":"text",
@@ -346,7 +346,7 @@ function sendQuickReply(sender,text,callback) {
                     if (error) {
                         console.log('Error sending messages:2 ', error)
                     } else if (response.body.error) {
-                        console.log('Error:2 ', response.body.error)
+                        console.log('Error:4 ', response.body.error)
                     }
 
                             if (callback) {
