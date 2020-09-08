@@ -52,7 +52,7 @@ function processEvent(event) {
                             }, 3000);
                             
                         });
-            }if(text === "playgame"){
+            }else if(text === "playgame"){
                 var greetings2 = "I have a 20% off coupon for you.\u000A Play a game with me to win a coupon.";
                 var splittedText1 = splitResponse(greetings2);
                 //sendFBMessage(sender, "I am Batuk, an Internet Doggo.", sendGif(sender));
