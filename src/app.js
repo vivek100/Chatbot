@@ -57,16 +57,16 @@ var PostCounter = [2,2,1,3,1,1];
                                                 "post_id": recentPostId
                                             },
                                             message: {
-                                                "text": "How can we help you?",
+                                                "text": "How can we help you? Talk to",
                                                 "quick_replies":[
                                                   {
                                                     "content_type":"text",
-                                                    "title":"Talk to Batuk!",
+                                                    "title":"Batuk!",
                                                     "payload":"selectedBatuk",
                                                     "image_url":"https://i.pinimg.com/originals/9f/8a/16/9f8a16e38df86be51951fa374fb9b351.png"
                                                   },{
                                                     "content_type":"text",
-                                                    "title":"Talk to Customer Care!",
+                                                    "title":"Customer Care!",
                                                     "payload":"selectedCare",
                                                     "image_url":"https://cdn.shopify.com/s/files/1/1061/1924/products/CAT_emoji_icon_png_1024x1024.png"
                                                   }
@@ -140,6 +140,21 @@ function processEvent(event) {
                     
                     setTimeout(() => {
                      sendFBMessage(sender, {text: textPart},sendGameButton(sender));
+                     
+                    }, 3000);
+                    
+                });
+            }else if(text === "selectedCare"){
+                var greetings2 = "I am giving control to our Customer Care executives..";
+                var splittedText1 = splitResponse(greetings2);
+                //sendFBMessage(sender, "I am Batuk, an Internet Doggo.", sendGif(sender));
+                
+                async.eachSeries(splittedText1, (textPart, callback) => {
+                    //sendGif(sender,"https://i.ibb.co/JqHjxXF/Mini-Shiba-Inu-HP-long.jpg");
+                    ssendFBMessage(sender, {text: textPart};
+                    
+                    setTimeout(() => {
+                     passControltoInApp();
                      
                     }, 3000);
                     
@@ -343,6 +358,26 @@ function sendFBMessage(sender, messageData, callback) {
             
         }
     });
+}
+function passControltoInApp() {
+    console.log("inside pass control ");
+    request({
+        url: 'https://graph.facebook.com/v2.6/me/pass_thread_control',
+        qs: {access_token: FB_PAGE_ACCESS_TOKEN},
+        method: 'POST',
+        json: {
+            recipient: {id: sender},
+            target_app_id: 263902037430900
+        }
+    }, (error, response, body) => {
+        if (error) {
+            console.log('Error sending message:1 ', error);
+        } else if (response.body.error) {
+            console.log('Error:1 ', response.body.error);
+        }
+            console.log("Control Passed")
+        }
+    );
 }
 function sendGif(sender,url,callback) {
     
