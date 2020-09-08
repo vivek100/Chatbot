@@ -48,7 +48,7 @@ function processEvent(event) {
                             sendFBSenderAction(sender,"typing_on");
                             
                             setTimeout(() => {
-                             sendFBMessage(sender, {text: textPart},sendQuickReply(sender,{text: "What \uE052/\uE04F person are you?"}));
+                             sendFBMessage(sender, {text: textPart},sendQuickReply(sender,{text: "What U+1F431 person are you?"}));
                              
                             }, 3000);
                             
@@ -321,11 +321,11 @@ function sendQuickReply(sender,text,callback) {
         "quick_replies":[
           {
             "content_type":"text",
-            "title":"\uE052 Dog",
+            "title":"U+1F431 Dog",
             "payload":"SelectedDog",
           },{
             "content_type":"text",
-            "title":"\uE04F Cat",
+            "title":" Cat",
             "payload":"SelectedCat",
           }
         ]
