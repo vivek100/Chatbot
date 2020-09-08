@@ -20,7 +20,7 @@ const sessionIds = new Map();
 
 var name=0;
 
-async function processEvent(event) {
+function processEvent(event) {
     var sender = event.sender.id.toString();
 
     if ((event.message && event.message.text) || (event.postback && event.postback.payload)) {
@@ -59,7 +59,7 @@ async function processEvent(event) {
                     var splittedText1 = splitResponse(greetings2);
                     //sendFBMessage(sender, "I am Batuk, an Internet Doggo.", sendGif(sender));
                     
-                    async.eachSeries(splittedText1, (textPart, callback) => {
+                    async.eachSeries(splittedText1, async (textPart, callback) => {
                         
                         sendFBSenderAction(sender,"typing_on");
                         await sendFBMessage(sender, {text: textPart});
