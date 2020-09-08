@@ -181,7 +181,7 @@ function processEvent(event) {
                     
                     async.eachSeries(splittedText1, (textPart, callback) => {
                         //sendGif(sender,"https://i.ibb.co/JqHjxXF/Mini-Shiba-Inu-HP-long.jpg");
-                        ssendFBMessage(sender, {text: textPart});
+                        sendFBMessage(sender, {text: textPart});
                         
                         setTimeout(() => {
                         passControltoInApp();
