@@ -53,35 +53,25 @@ var PostCounter = [2,2,1,3,1,1];
                                         qs: {access_token:FB_PAGE_ACCESS_TOKEN},
                                         method: 'POST',
                                         json: {
-                                            "recipient": {
+                                            recipient: {
                                                 "post_id": recentPostId
                                             },
-                                            "message": {
-                                                "attachment":{
-                                                  "type":"template",
-                                                  "payload":{
-                                                    "template_type":"button",
-                                                    "text":"Of course, what is your budget for the gift?",
-                                                    "buttons":[
-                                                        {
-                                                            "content_type": "postback",
-                                                            "title": "LESS THAN $20",
-                                                            "payload": "GIFT_BUDGET_20_PAYLOAD"
-                                                        },
-                                                        {
-                                                            "content_type": "postback",
-                                                            "title": "$20 TO $50",
-                                                            "payload": "GIFT_BUDGET_20_TO_50_PAYLOAD"
-                                                        },
-                                                        {
-                                                            "content_type": "postback",
-                                                            "title": "MORE THAN $50",
-                                                            "payload": "GIFT_BUDGET_50_PAYLOAD"
-                                                        }
-                                                    ]
+                                            message: {
+                                                "text": "How can we help you?",
+                                                "quick_replies":[
+                                                  {
+                                                    "content_type":"text",
+                                                    "title":"Talk to Batuk!",
+                                                    "payload":"selectedBatuk",
+                                                    "image_url":"https://i.pinimg.com/originals/9f/8a/16/9f8a16e38df86be51951fa374fb9b351.png"
+                                                  },{
+                                                    "content_type":"text",
+                                                    "title":"Talk to Customer Care!",
+                                                    "payload":"selectedCare",
+                                                    "image_url":"https://cdn.shopify.com/s/files/1/1061/1924/products/CAT_emoji_icon_png_1024x1024.png"
                                                   }
-                                                }
-                                              },
+                                                ]
+                                              }
                                         }
                                     }, function(error, response, body) {
                                         if (error) {
