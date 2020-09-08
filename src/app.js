@@ -115,7 +115,7 @@ function processEvent(event) {
             if(text === "no"){
             
             }else if(text === "yes"){
-                        var greetings2 = "This is me when I was 4 months old :D.\u000A I am a Shiba Inu.";
+                        var greetings2 = "This is me when I was 4 months old :D.\u000AI am a Shiba Inu.";
                         var splittedText1 = splitResponse(greetings2);
                         //sendFBMessage(sender, "I am Batuk, an Internet Doggo.", sendGif(sender));
                         
@@ -130,7 +130,7 @@ function processEvent(event) {
                             
                         });
             }else if(text === "playgame"){
-                var greetings2 = "I have a 20% off coupon for you.\u000A Play a game with me to win a coupon.";
+                var greetings2 = "want a 20% off coupon.";
                 var splittedText1 = splitResponse(greetings2);
                 //sendFBMessage(sender, "I am Batuk, an Internet Doggo.", sendGif(sender));
                 
@@ -183,10 +183,9 @@ function processEvent(event) {
                         //sendGif(sender,"https://i.ibb.co/JqHjxXF/Mini-Shiba-Inu-HP-long.jpg");
                         sendFBMessage(sender, {text: textPart});
                         
-                        setTimeout(() => {
+
                         passControltoInApp(sender);
-                        
-                        }, 3000);
+
                         
                     });
                 }
@@ -534,7 +533,7 @@ function sendCustomDogLayout(sender,callback) {
                 "buttons":[
                   {
                     "type":"web_url",
-                    "url":"https://petersfancybrownhats.com",
+                    "url":"https://batukthedog.com",
                     "title":"View Website"
                   },{
                     "type":"postback",
@@ -554,7 +553,7 @@ function sendCustomDogLayout(sender,callback) {
                 "buttons":[
                   {
                     "type":"web_url",
-                    "url":"https://petersfancybrownhats.com",
+                    "url":"https://batukthedog.com",
                     "title":"View Website"
                   },{
                     "type":"postback",
@@ -574,7 +573,7 @@ function sendCustomDogLayout(sender,callback) {
                 "buttons":[
                   {
                     "type":"web_url",
-                    "url":"https://petersfancybrownhats.com",
+                    "url":"https://batukthedog.com",
                     "title":"View Website"
                   },{
                     "type":"postback",
@@ -618,7 +617,7 @@ function sendGameButton(sender,callback) {
             type: "template",
             payload: {
                 template_type: "button",
-                text: "Play Game.",
+                text: "Click on the button.",
                 buttons: [{
                     type: "web_url",
                     url: "https://nameless-tor-65554.herokuapp.com" + "/options.html",
