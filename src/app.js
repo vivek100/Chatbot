@@ -39,16 +39,16 @@ function processEvent(event) {
             
                }
             if(text === "yes"){
-                        var greetings2 = "I am a Shiba Inu breed,\u000A 4 years old now.\u000AThis is me when I was 4 months old :D.";
+                        var greetings2 = "I am a Shiba Inu breed,\u000A 4 years old now.\u000AThis is me when I was 4 months old 🐶.";
                         var splittedText1 = splitResponse(greetings2);
                         //sendFBMessage(sender, "I am Batuk, an Internet Doggo.", sendGif(sender));
                         
                         async.eachSeries(splittedText1, (textPart, callback) => {
-                            sendGif(sender,"https://shiba.fr/wp-content/uploads/shiba-inu-prix-chiot.jpg");
+                            sendGif(sender,"https://i.ibb.co/JqHjxXF/Mini-Shiba-Inu-HP-long.jpg");
                             sendFBSenderAction(sender,"typing_on");
                             
                             setTimeout(() => {
-                             sendFBMessage(sender, {text: textPart},sendFBMessage(sender,{text: "Do you own a pet?"}));
+                             sendFBMessage(sender, {text: textPart},sendQuickReply(sender,{text: "What 🐶/🐱 person are you?"}));
                              
                             }, 3000);
                             
@@ -314,7 +314,47 @@ function sendGreetingOptions(sender,callback) {
             }, 3000);
 
 }
+function sendQuickReply(sender,text,callback) {
+    sendFBSenderAction(sender,"typing_on");
+    let messageData = {
+        "text": text,
+        "quick_replies":[
+          {
+            "content_type":"text",
+            "title":"🐶 Dog",
+            "payload":"SelectedDog",
+          },{
+            "content_type":"text",
+            "title":"🐱 Cat",
+            "payload":"SelectedCat",
+          }
+        ]
+      }
+    setTimeout(() => {
+            request({
+                    url: 'https://graph.facebook.com/v2.6/me/messages',
+                    qs: {access_token:FB_PAGE_ACCESS_TOKEN},
+                    method: 'POST',
+                    json: { 
+                        recipient: {id:sender},
+                        messaging_type: "RESPONSE",
+                        message: messageData,
+                    }
+                }, function(error, response, body) {
+                    if (error) {
+                        console.log('Error sending messages:2 ', error)
+                    } else if (response.body.error) {
+                        console.log('Error:2 ', response.body.error)
+                    }
 
+                            if (callback) {
+                        callback();
+                    }
+                });
+
+            }, 3000);
+
+}
 function sendGreetingOptions2(sender,callback) {
     sendFBSenderAction(sender,"typing_on");
     let messageData = {
