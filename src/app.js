@@ -37,8 +37,7 @@ function processEvent(event) {
             console.log("Post back", text);
             if(text === "no"){
             
-               }
-            if(text === "yes"){
+            }else if(text === "yes"){
                         var greetings2 = "This is me when I was 4 months old :D.\u000A I am a Shiba Inu.";
                         var splittedText1 = splitResponse(greetings2);
                         //sendFBMessage(sender, "I am Batuk, an Internet Doggo.", sendGif(sender));
@@ -53,24 +52,20 @@ function processEvent(event) {
                             }, 3000);
                             
                         });
-               }
-
-            if(event.message.quick_reply.payload === "SelectedDog"){
-                console.log("Post back", event.message.quick_reply.payload);
-                var greetings2 = "I just Created a sticker for you!";
-                var splittedText1 = splitResponse(greetings2);
-                //sendFBMessage(sender, "I am Batuk, an Internet Doggo.", sendGif(sender));
-                
-                async.eachSeries(splittedText1, (textPart, callback) => {
-                    sendGif(sender,"https://image.freepik.com/free-vector/astronaut-dog_151676-115.jpg");
-                    sendFBSenderAction(sender,"typing_on");
+            }else if(event.message.quick_reply){
+                if (event.message.quick_reply.payload === "SelectedDog") {
+                    console.log("Post back", event.message.quick_reply.payload);
+                    var greetings2 = "I just Created a sticker for you!";
+                    var splittedText1 = splitResponse(greetings2);
+                    //sendFBMessage(sender, "I am Batuk, an Internet Doggo.", sendGif(sender));
                     
-                    setTimeout(() => {
-                     //sendFBMessage(sender, {text: textPart},sendQuickReply(sender,{text: "What person are you?"}));
-                     
-                    }, 3000);
-                    
-                });
+                    async.eachSeries(splittedText1, (textPart, callback) => {
+                        
+                        sendFBSenderAction(sender,"typing_on");
+                        await sendFBMessage(sender, {text: textPart});
+                        sendGif(sender,"https://image.freepik.com/free-vector/astronaut-dog_151676-115.jpg");
+                    });
+                }
             }
 
 
