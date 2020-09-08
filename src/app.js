@@ -48,7 +48,7 @@ function processEvent(event) {
                             sendFBSenderAction(sender,"typing_on");
                             
                             setTimeout(() => {
-                             sendFBMessage(sender, {text: textPart},sendQuickReply(sender,{text: "What 🐶/🐱 person are you?"}));
+                             sendFBMessage(sender, {text: textPart},sendQuickReply(sender,{text: "What \uE052/\uE04F person are you?"}));
                              
                             }, 3000);
                             
