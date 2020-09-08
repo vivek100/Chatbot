@@ -520,8 +520,8 @@ function sendCustomDogLayout(sender,callback) {
             "template_type":"generic",
             "elements":[
                {
-                "title":"Custome Grey Sticker!",
-                "image_url":"https://petersfancybrownhats.com/company_image.png",
+                "title":"Karate Sticker!",
+                "image_url":"https://image.freepik.com/free-vector/cute-shiba-inu-dog-kicking_253952-396.jpg",
                 "subtitle":"$2.99",
                 "default_action": {
                   "type": "web_url",
@@ -540,8 +540,8 @@ function sendCustomDogLayout(sender,callback) {
                   }              
                 ]      
               },{
-                "title":"Custome Green Sticker!",
-                "image_url":"https://petersfancybrownhats.com/company_image.png",
+                "title":"Cooking Sticker!",
+                "image_url":"https://image.freepik.com/free-vector/cute-shiba-inu-chef_253952-389.jpg",
                 "subtitle":"$2.99",
                 "default_action": {
                   "type": "web_url",
@@ -560,8 +560,8 @@ function sendCustomDogLayout(sender,callback) {
                   }              
                 ]      
               },{
-                "title":"Custome Blue Sticker!",
-                "image_url":"https://petersfancybrownhats.com/company_image.png",
+                "title":"Gym Sticker!",
+                "image_url":"https://image.freepik.com/free-vector/cute-shiba-inu-barbell_253952-390.jpg",
                 "subtitle":"$2.99",
                 "default_action": {
                   "type": "web_url",
@@ -803,7 +803,7 @@ app.post('/webhook/', (req, res) => {
 // Handle postback from webview
 app.get('/optionspostback', (req, res) => {
     let body = req.query;
-    let response = `Great, I will book you a ${body.bed} bed, with ${body.pillows} pillows and a ${body.view} view.`
+    let response = `You won the game, Your 20% coupon code: XDSH34.`
 
     res.status(200).send('Please close this window to return to the conversation thread.');
     console.log("Id when inside: "+body.psid)
