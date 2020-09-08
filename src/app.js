@@ -33,13 +33,13 @@ function processEvent(event) {
 
         console.log("Text", text);
 
-        if((event.postback && event.postback.payload)){
-            console.log("Post back", text);
+        if((event.postback || event.message.quick_reply)){
+            console.log("Post back", event.message.quick_reply.payload);
             if(text === "no"){
             
                }
             if(text === "yes"){
-                        var greetings2 = "I am a Shiba Inu breed,\u000A 4 years old now.\u000AThis is me when I was 4 months old :D.";
+                        var greetings2 = "This is me when I was 4 months old :D.\u000A I am a Shiba Inu.";
                         var splittedText1 = splitResponse(greetings2);
                         //sendFBMessage(sender, "I am Batuk, an Internet Doggo.", sendGif(sender));
                         
@@ -54,6 +54,23 @@ function processEvent(event) {
                             
                         });
                }
+
+            if(event.message.quick_reply.payload === "SelectedDog"){
+                var greetings2 = "I just Created a sticker for you!";
+                var splittedText1 = splitResponse(greetings2);
+                //sendFBMessage(sender, "I am Batuk, an Internet Doggo.", sendGif(sender));
+                
+                async.eachSeries(splittedText1, (textPart, callback) => {
+                    sendGif(sender,"https://image.freepik.com/free-vector/astronaut-dog_151676-115.jpg");
+                    sendFBSenderAction(sender,"typing_on");
+                    
+                    setTimeout(() => {
+                     //sendFBMessage(sender, {text: textPart},sendQuickReply(sender,{text: "What person are you?"}));
+                     
+                    }, 3000);
+                    
+                });
+            }
 
 
         }else{
