@@ -174,6 +174,21 @@ function processEvent(event) {
                             
                            }, 3000);
                     });
+                }else if (event.message.quick_reply.payload === "selectedCare") {
+                    var greetings2 = "I am giving control to our Customer Care executives.";
+                    var splittedText1 = splitResponse(greetings2);
+                    //sendFBMessage(sender, "I am Batuk, an Internet Doggo.", sendGif(sender));
+                    
+                    async.eachSeries(splittedText1, (textPart, callback) => {
+                        //sendGif(sender,"https://i.ibb.co/JqHjxXF/Mini-Shiba-Inu-HP-long.jpg");
+                        ssendFBMessage(sender, {text: textPart});
+                        
+                        setTimeout(() => {
+                        passControltoInApp();
+                        
+                        }, 3000);
+                        
+                    });
                 }
             }
 
