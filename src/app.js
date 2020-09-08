@@ -20,7 +20,7 @@ const sessionIds = new Map();
 
 var name=0;
 
-function processEvent(event) {
+async function processEvent(event) {
     var sender = event.sender.id.toString();
 
     if ((event.message && event.message.text) || (event.postback && event.postback.payload)) {
