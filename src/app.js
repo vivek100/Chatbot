@@ -39,7 +39,7 @@ function processEvent(event) {
             
                }
             if(text === "yes"){
-                        var greetings2 = "I am a Shiba Inu breed,\u000A 4 years old now.\u000AThis is me when I was 4 months old 🐶.";
+                        var greetings2 = "I am a Shiba Inu breed,\u000A 4 years old now.\u000AThis is me when I was 4 months old :D.";
                         var splittedText1 = splitResponse(greetings2);
                         //sendFBMessage(sender, "I am Batuk, an Internet Doggo.", sendGif(sender));
                         
@@ -48,7 +48,7 @@ function processEvent(event) {
                             sendFBSenderAction(sender,"typing_on");
                             
                             setTimeout(() => {
-                             sendFBMessage(sender, {text: textPart},sendQuickReply(sender,{text: "What U+1F431 person are you?"}));
+                             sendFBMessage(sender, {text: textPart},sendQuickReply(sender,{text: "What person are you?"}));
                              
                             }, 3000);
                             
@@ -321,12 +321,14 @@ function sendQuickReply(sender,text,callback) {
         "quick_replies":[
           {
             "content_type":"text",
-            "title":"U+1F431 Dog",
+            "title":"Dog Person",
             "payload":"SelectedDog",
+            "image_url":"https://i.pinimg.com/originals/9f/8a/16/9f8a16e38df86be51951fa374fb9b351.png"
           },{
             "content_type":"text",
-            "title":" Cat",
+            "title":"Cat Person",
             "payload":"SelectedCat",
+            "image_url":"https://cdn.shopify.com/s/files/1/1061/1924/products/CAT_emoji_icon_png_1024x1024.png"
           }
         ]
       }
