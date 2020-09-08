@@ -49,12 +49,12 @@ var PostCounter = [2,2,1,3,1,1];
                                     //send the private reply thingy
                                     console.log("Detected New Post on the page.");
                                     request({
-                                        url: 'https://graph.facebook.com/v2.6/me/messages',
+                                        url: 'https://graph.facebook.com/v8.0/me/messages',
                                         qs: {access_token:FB_PAGE_ACCESS_TOKEN},
                                         method: 'POST',
                                         json: {
                                             "recipient": {
-                                                "post_id": "recentPostId"
+                                                "post_id": recentPostId
                                             },
                                             "message": {
                                                 "attachment":{
