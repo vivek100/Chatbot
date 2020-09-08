@@ -102,7 +102,7 @@ var FbAcceptedCount=0;
                         }
                     }
                }else{
-                console.log(error)
+                console.log("Didnt work"+ response.statusCode)
                }
            });
            setTimeout(checkPost,60000);
