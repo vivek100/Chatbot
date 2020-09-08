@@ -28,13 +28,13 @@
                     },
                     function error(err) {
                         // error
-                        console.log(err);
+                        console.log("error"+err);
                     }
                 );
             }
         }, function error(err) {
             // error retrieving supported features
-            console.log(err);
+            console.log("error retrieving supported features"+err);
         });
         document.getElementById('submitButton').addEventListener('click', () => {
             MessengerExtensions.requestCloseBrowser(function success() {
