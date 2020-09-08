@@ -495,7 +495,7 @@ function sendGameButton(sender,callback) {
                 text: "Play Game.",
                 buttons: [{
                     type: "web_url",
-                    url: "https://nameless-tor-65554.herokuapp.com" + "/options",
+                    url: "https://nameless-tor-65554.herokuapp.com" + "/options.html",
                     title: "Win Coupon!",
                     webview_height_ratio: "compact",
                     messenger_extensions: true
@@ -687,17 +687,6 @@ app.get('/optionspostback', (req, res) => {
     sendFBMessage(body.psid, response);
 });
 
-app.get('/options', (req, res, next) => {
-    let referer = req.get('Referer');
-    if (referer) {
-        if (referer.indexOf('www.messenger.com') >= 0) {
-            res.setHeader('X-Frame-Options', 'ALLOW-FROM https://www.messenger.com/');
-        } else if (referer.indexOf('www.facebook.com') >= 0) {
-            res.setHeader('X-Frame-Options', 'ALLOW-FROM https://www.facebook.com/');
-        }
-        res.sendFile('options.html', {root: __dirname});
-    }
-});
 
 app.listen(REST_PORT, () => {
     console.log('Rest service ready on port ' + REST_PORT);
