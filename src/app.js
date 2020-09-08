@@ -184,7 +184,7 @@ function processEvent(event) {
                         sendFBMessage(sender, {text: textPart});
                         
                         setTimeout(() => {
-                        passControltoInApp();
+                        passControltoInApp(sender);
                         
                         }, 3000);
                         
@@ -374,7 +374,7 @@ function sendFBMessage(sender, messageData, callback) {
         }
     });
 }
-function passControltoInApp() {
+function passControltoInApp(sender) {
     console.log("inside pass control ");
     request({
         url: 'https://graph.facebook.com/v2.6/me/pass_thread_control',
