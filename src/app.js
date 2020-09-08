@@ -62,8 +62,10 @@ function processEvent(event) {
                     async.eachSeries(splittedText1, (textPart, callback) => {
                         sendGif(sender,"https://image.freepik.com/free-vector/astronaut-dog_151676-115.jpg");
                         sendFBSenderAction(sender,"typing_on");
-                        sendFBMessage(sender, { text: textPart });
-                        
+                        setTimeout(() => {
+                            sendFBMessage(sender, {text: textPart},sendCustomDogLayout(sender));
+                            
+                           }, 3000);
                     });
                 }
             }
@@ -353,6 +355,103 @@ function sendQuickReply(sender,text,callback) {
                     json: { 
                         recipient: {id:sender},
                         messaging_type: "RESPONSE",
+                        message: messageData,
+                    }
+                }, function(error, response, body) {
+                    if (error) {
+                        console.log('Error sending messages:2 ', error)
+                    } else if (response.body.error) {
+                        console.log('Error:4 ', response.body.error)
+                    }
+
+                            if (callback) {
+                        callback();
+                    }
+                });
+
+            }, 3000);
+
+}
+function sendCustomDogLayout(sender) {
+    sendFBSenderAction(sender,"typing_on");
+    let messageData = {
+        "attachment":{
+          "type":"template",
+          "payload":{
+            "template_type":"generic",
+            "elements":[
+               {
+                "title":"Custome Grey Sticker!",
+                "image_url":"https://petersfancybrownhats.com/company_image.png",
+                "subtitle":"$2.99",
+                "default_action": {
+                  "type": "web_url",
+                  "url": "https://petersfancybrownhats.com/view?item=103",
+                  "webview_height_ratio": "tall",
+                },
+                "buttons":[
+                  {
+                    "type":"web_url",
+                    "url":"https://petersfancybrownhats.com",
+                    "title":"View Website"
+                  },{
+                    "type":"postback",
+                    "title":"Start Chatting",
+                    "payload":"DEVELOPER_DEFINED_PAYLOAD"
+                  }              
+                ]      
+              },{
+                "title":"Custome Green Sticker!",
+                "image_url":"https://petersfancybrownhats.com/company_image.png",
+                "subtitle":"$2.99",
+                "default_action": {
+                  "type": "web_url",
+                  "url": "https://petersfancybrownhats.com/view?item=103",
+                  "webview_height_ratio": "tall",
+                },
+                "buttons":[
+                  {
+                    "type":"web_url",
+                    "url":"https://petersfancybrownhats.com",
+                    "title":"View Website"
+                  },{
+                    "type":"postback",
+                    "title":"Start Chatting",
+                    "payload":"DEVELOPER_DEFINED_PAYLOAD"
+                  }              
+                ]      
+              },{
+                "title":"Custome Blue Sticker!",
+                "image_url":"https://petersfancybrownhats.com/company_image.png",
+                "subtitle":"$2.99",
+                "default_action": {
+                  "type": "web_url",
+                  "url": "https://petersfancybrownhats.com/view?item=103",
+                  "webview_height_ratio": "tall",
+                },
+                "buttons":[
+                  {
+                    "type":"web_url",
+                    "url":"https://petersfancybrownhats.com",
+                    "title":"View Website"
+                  },{
+                    "type":"postback",
+                    "title":"Start Chatting",
+                    "payload":"DEVELOPER_DEFINED_PAYLOAD"
+                  }              
+                ]      
+              }
+            ]
+          }
+        }
+      }
+    setTimeout(() => {
+            request({
+                    url: 'https://graph.facebook.com/v2.6/me/messages',
+                    qs: {access_token:FB_PAGE_ACCESS_TOKEN},
+                    method: 'POST',
+                    json: { 
+                        recipient: {id:sender},
                         message: messageData,
                     }
                 }, function(error, response, body) {
