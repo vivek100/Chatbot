@@ -34,7 +34,7 @@ function processEvent(event) {
         console.log("Text", text);
 
         if((event.postback || event.message.quick_reply)){
-            console.log("Post back", event.message.quick_reply.payload);
+            console.log("Post back", text);
             if(text === "no"){
             
                }
@@ -56,6 +56,7 @@ function processEvent(event) {
                }
 
             if(event.message.quick_reply.payload === "SelectedDog"){
+                console.log("Post back", event.message.quick_reply.payload);
                 var greetings2 = "I just Created a sticker for you!";
                 var splittedText1 = splitResponse(greetings2);
                 //sendFBMessage(sender, "I am Batuk, an Internet Doggo.", sendGif(sender));
