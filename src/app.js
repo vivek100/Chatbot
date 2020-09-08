@@ -128,7 +128,7 @@ function processEvent(event) {
                             
                         });
             }else if(text === "playgame"){
-                var greetings2 = "want a 20% off coupon.";
+                var greetings2 = "Do you want a 20% off coupon?";
                 var splittedText1 = splitResponse(greetings2);
                 //sendFBMessage(sender, "I am Batuk, an Internet Doggo.", sendGif(sender));
                 
@@ -170,7 +170,7 @@ function processEvent(event) {
                         setTimeout(() => {
                             sendFBMessage(sender, {text: textPart},sendCustomDogLayout(sender));
                             
-                           }, 3000);
+                           }, 5000);
                     });
                 }else if (event.message.quick_reply.payload === "selectedCare") {
                     var greetings2 = "I am giving control to our Customer Care executives.";
@@ -559,7 +559,7 @@ function sendCustomDogLayout(sender,callback) {
                 "subtitle":"$2.99",
                 "default_action": {
                   "type": "web_url",
-                  "url": "https://petersfancybrownhats.com/view?item=103",
+                  "url": "https://batukthedog.com/view?item=103",
                   "webview_height_ratio": "tall",
                 },
                 "buttons":[
@@ -579,7 +579,7 @@ function sendCustomDogLayout(sender,callback) {
                 "subtitle":"$2.99",
                 "default_action": {
                   "type": "web_url",
-                  "url": "https://petersfancybrownhats.com/view?item=103",
+                  "url": "https://batukthedog.com/view?item=103",
                   "webview_height_ratio": "tall",
                 },
                 "buttons":[
@@ -599,7 +599,7 @@ function sendCustomDogLayout(sender,callback) {
                 "subtitle":"$2.99",
                 "default_action": {
                   "type": "web_url",
-                  "url": "https://petersfancybrownhats.com/view?item=103",
+                  "url": "https://batukthedog.com/view?item=103",
                   "webview_height_ratio": "tall",
                 },
                 "buttons":[
@@ -841,8 +841,7 @@ app.get('/optionspostback', (req, res) => {
 
     res.status(200).send('Please close this window to return to the conversation thread.');
     console.log("Id when inside: "+body.psid)
-    sendOneTimeMessage(body.psid, {text: response});
-    sendOneTimeMessage(body.psid);
+    sendFBMessage(body.psid, {text: response},sendOneTimeMessage(body.psid));
 });
 
 
