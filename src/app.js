@@ -99,9 +99,10 @@ var FbAcceptedCount=0;
                         if(data.data != undefined){
                             recentPostId=data.data[0].id;
                             PostCounter[0]++;
-                            io.emit('Sent Initial Count',PostCounter);
                         }
                     }
+               }else{
+                console.log(error)
                }
            });
            setTimeout(checkPost,60000);
