@@ -59,11 +59,11 @@ function processEvent(event) {
                     var splittedText1 = splitResponse(greetings2);
                     //sendFBMessage(sender, "I am Batuk, an Internet Doggo.", sendGif(sender));
                     
-                    async.eachSeries(splittedText1, async (textPart, callback) => {
-                        
-                        sendFBSenderAction(sender,"typing_on");
-                        await sendFBMessage(sender, {text: textPart});
+                    async.eachSeries(splittedText1, (textPart, callback) => {
                         sendGif(sender,"https://image.freepik.com/free-vector/astronaut-dog_151676-115.jpg");
+                        sendFBSenderAction(sender,"typing_on");
+                        sendFBMessage(sender, { text: textPart });
+                        
                     });
                 }
             }
